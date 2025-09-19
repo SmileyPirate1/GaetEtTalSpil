@@ -10,6 +10,22 @@ public class Main {
         System.out.println("Til at starte med skal du vælge en sværhedsgrad (let, mellem, svær)");
 
         String difficulty = input.nextLine();
+        int chosenDifficulty = 0;
+        boolean correct = true;
+
+        do {
+            if (difficulty.equals("let")) {
+                chosenDifficulty = 10;
+            } else if (difficulty.equals("mellem")) {
+                chosenDifficulty = 50;
+            } else if (difficulty.equals("svær")) {
+                chosenDifficulty = 100;
+            } else {
+                System.out.println("vælg en sværhedsgrad");
+                correct = false;
+                difficulty = input.nextLine();
+            }
+        } while (correct == false );
 
     }
 }
