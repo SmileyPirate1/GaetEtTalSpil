@@ -1,96 +1,90 @@
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        System.out.println("Velkommen til spillet, gæt et tal: ");
 
-        System.out.println("Hej og velkommen til gæt et tal spillet");
-
-        int chosenDifficulty = 0;
-//        boolean correct = true;
         boolean play = true;
 
-        do {
-
-            System.out.println("Til at starte med skal du vælge en sværhedsgrad (let, mellem, svær)");
+        while (play) {
+            //Starter med at vælge sværhedsgrad
+            System.out.println("Du skal vælge din sværhedsgrad valgmuligheder er : Let, Mellem, Svær");
             String difficulty = input.nextLine();
+            int maxNumber = chooseDifficulty(difficulty);
 
-//            do {
-//                if (difficulty.equals("let")) {
-//                    chosenDifficulty = 10;
-//                } else if (difficulty.equals("mellem")) {
-//                    chosenDifficulty = 50;
-//                } else if (difficulty.equals("svær")) {
-//                    chosenDifficulty = 100;
-//                } else {
-//                    System.out.println("vælg en sværhedsgrad");
-//                    correct = false;
-//                    difficulty = input.nextLine();
-//                }
-//            } while (correct == false );
+            //Jeg finder nu mit random nummer
+            int randomNumber = randomNumberGenerator(maxNumber);
 
-            int choosenDifficulty = chooseDifficulty(difficulty);
+            //Jeg skal nu starte spillet
+            boolean game = false;
 
-            int number = 1 + (int)(choosenDifficulty * Math.random());
-
-
-
-            for (int attempts = 1; attempts <= 3; attempts++) {
-                System.out.println("gæt et tal: ");
+            for (int attempts = 0; attempts < 3; attempts++) {
+                System.out.println("Gæt et tal");
                 int guess = input.nextInt();
+                input.nextLine();
 
-                if (guess == number) {
-                    System.out.println("Tillykke, du har gættet rigtigt på " + attempts + " forsøg");
+                String returnFeedBack = checkGuess(randomNumber, guess);
+                System.out.println(returnFeedBack);
+
+                if (randomNumber == guess) {
+                    //System.out.println("Du har gættet rigtigt!");
+                    game = true;
                     break;
-                } else if (guess < number) {
-                    System.out.println("Dit gæt var under tallet");
-                } else {
-                    System.out.println("Du gættede for højt");
                 }
             }
-
-            System.out.println("du har brugt alle dine gæt, vil du spille igen?");
-            String again = input.nextLine();
-            again = input.nextLine();
-
-            switch (again) {
-                case "ja":
-                    play=true;
-                    break;
-                case "nej":
-                    play=false;
-                    break;
+            if (!game) {
+                System.out.println("Du har brugt alle dine gæt, det rigtige tal var: " + randomNumber);
             }
-
-
-        } while (play);
-
-
+            System.out.println("Vil du gerne spille igen?");
+            String answer = input.nextLine();
+            play = handlePlayAgain(answer);
+        }
 
     }
 
+    //Metode 1 til at vælge sværhedsgrad
     public static int chooseDifficulty(String difficulty) {
-        Scanner input = new Scanner(System.in);
+        if (difficulty.equalsIgnoreCase("let")) {
+            return 10;
+        } else if (difficulty.equalsIgnoreCase("standard")) {
+            return 50;
+        } else if (difficulty.equalsIgnoreCase("svær")) {
+            return 100;
+        } else {
+            System.out.println("Dit tal er ugyldigt, standard vælges automatisk");
+            return 50;
+        }
+    }
 
-        boolean correct = true;
-        int chosenDifficulty = 0;
+    //Metode 2 til at genere et random tal
+    public static int randomNumberGenerator(int max){
+        return 1 + (int) (Math.random()*(max));
+    }
 
-        do {
-            if (difficulty.equals("let")) {
-                chosenDifficulty = 10;
-            } else if (difficulty.equals("mellem")) {
-                chosenDifficulty = 50;
-            } else if (difficulty.equals("svær")) {
-                chosenDifficulty = 100;
-            } else {
-                System.out.println("vælg en sværhedsgrad");
-                correct = false;
-                difficulty = input.nextLine();
-            }
-        } while (correct == false );
+    //Metode 3 til at tjekke op på ens gæt
+    public static String checkGuess(int number, int guess){
+        if (guess == number){
+            return "Tillykke! Du gættede rigtigt";
+        }
+        else if (guess < number){
+            return "Dit gæt skal være højere";
+        }
+        else {
+            return "Dit gæt skal være lavere";
+        }
+    }
 
-        return (chosenDifficulty);
+    //Metode 4 til at spørge om brugeren vil spille igen.
+    public static boolean handlePlayAgain(String answer){
+        switch (answer.toLowerCase()){
+            case "ja":
+                return true;
+            case "nej":
+                return false;
+            default:
+                System.out.println("Ugyldigt valg, spillet afsluttes");
+                return false;
+        }
     }
 }
